@@ -21,7 +21,6 @@
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=2113943835999012&ev=PageView&noscript=1"
     /></noscript>
-    <!-- End Meta Pixel Code -->
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -52,7 +51,7 @@
             text-align: center;
         }
 
-        /* Profile Logo Section - Floating Animation added */
+        /* Profile Logo Section */
         .logo-container {
             position: relative;
             margin-top: 10px;
@@ -73,19 +72,18 @@
             overflow: hidden;
         }
 
-        /* Logo Image */
         .logo-circle img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        /* Title with Diamond Emojis */
+        /* Title */
         .title {
             font-size: 26px;
             font-weight: 800;
             color: #d600d6;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -95,7 +93,31 @@
             color: #0088cc;
         }
 
-        /* Telegram CTA Button - Pop & Glow Animation added */
+        /* Live Global Click Counter Badge */
+        .live-counter-box {
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid #00e676;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #00e676;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00e676;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00e676;
+            animation: blink 1.2s infinite;
+        }
+
+        /* Telegram CTA Button */
         .telegram-btn {
             width: 100%;
             padding: 16px;
@@ -176,42 +198,10 @@
             margin-top: auto;
         }
 
-        /* Keyframes for Logo Floating Effect */
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-            100% {
-                transform: translateY(0px);
-            }
-        }
-
-        /* Keyframes for Button Pop & Glow Effect */
-        @keyframes popGlow {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 10px rgba(230, 0, 115, 0.5);
-            }
-            50% {
-                transform: scale(1.04);
-                box-shadow: 0 0 25px rgba(0, 136, 204, 0.9), 0 0 35px rgba(230, 0, 115, 0.8);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 10px rgba(230, 0, 115, 0.5);
-            }
-        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        @keyframes popGlow { 0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(230, 0, 115, 0.5); } 50% { transform: scale(1.04); box-shadow: 0 0 25px rgba(0, 136, 204, 0.9), 0 0 35px rgba(230, 0, 115, 0.8); } }
     </style>
-
-    <!-- Auto Redirect Script -->
-    <script>
-        setTimeout(function() {
-            window.location.href = "https://t.me/+vSHfhkjBOok2ZGE1";
-        }, 5000);
-    </script>
 </head>
 <body>
 
@@ -228,8 +218,14 @@
             🔷 <span>ગુજરાતી</span> TRADER 🔷
         </div>
 
-        <!-- Telegram Button -->
-        <a href="https://t.me/+vSHfhkjBOok2ZGE1" class="telegram-btn" target="_blank">
+        <!-- Real-Time Click Counter Display -->
+        <div class="live-counter-box">
+            <span class="pulse-dot"></span>
+            <span id="click-counter">...</span> People Clicked & Joined
+        </div>
+
+        <!-- Telegram CTA Button -->
+        <a href="https://t.me/+vSHfhkjBOok2ZGE1" id="telegram-btn" class="telegram-btn" target="_blank">
             <i class="fa-brands fa-telegram"></i> JOIN OUR TELEGRAM
         </a>
 
@@ -265,6 +261,45 @@
             © 2026 Gujarati Trader • All Rights Reserved
         </div>
     </div>
+
+    <!-- Live Click Count Script -->
+    <script>
+        const counterElement = document.getElementById('click-counter');
+        const telegramBtn = document.getElementById('telegram-btn');
+        
+        // CountAPI Key specific for your repository/site
+        const namespace = "gujaratitrader13-rgb";
+        const key = "telegram_button_clicks";
+
+        // 1. Page load hone par ab tak ke total clicks fetch karo
+        fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.value !== undefined) {
+                    counterElement.innerText = data.value;
+                } else {
+                    counterElement.innerText = "0";
+                }
+            })
+            .catch(() => {
+                counterElement.innerText = "1";
+            });
+
+        // 2. Jaise hi user Telegram button click kare, count +1 karo database me
+        telegramBtn.addEventListener('click', function() {
+            // Meta Pixel Lead Event Fire
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'Lead');
+            }
+
+            // Real Click Counter Update
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(res => res.json())
+                .then(data => {
+                    counterElement.innerText = data.value;
+                });
+        });
+    </script>
 
 </body>
 </html>
