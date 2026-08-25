@@ -263,23 +263,29 @@
         </div>
     </div>
 
-    <!-- Click Counter Script -->
+    <!-- Permanent LocalStorage Click Counter Script -->
     <script>
-        const counterElement = document.getElementById('click-counter');
-        const telegramBtn = document.getElementById('telegram-btn');
+        document.addEventListener("DOMContentLoaded", function () {
+            const counterElement = document.getElementById('click-counter');
+            const telegramBtn = document.getElementById('telegram-btn');
 
-        // Initial Count (124) load hoga
-        let count = parseInt(localStorage.getItem('gt_telegram_clicks')) || 124;
-        counterElement.innerText = count;
-
-        // Button click par count +1 increase hoga aur save rahega
-        telegramBtn.addEventListener('click', function() {
-            if (typeof fbq !== 'undefined') {
-                fbq('track', 'Lead');
+            // Save hui counting fetch karein ya default 124 lein
+            let currentCount = parseInt(localStorage.getItem('gt_saved_clicks'));
+            if (isNaN(currentCount)) {
+                currentCount = 124;
             }
-            count++;
-            localStorage.setItem('gt_telegram_clicks', count);
-            counterElement.innerText = count;
+
+            counterElement.innerText = currentCount;
+
+            // Click hone par count badhayein aur storage me permanently update karein
+            telegramBtn.addEventListener('click', function () {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Lead');
+                }
+                currentCount += 1;
+                localStorage.setItem('gt_saved_clicks', currentCount);
+                counterElement.innerText = currentCount;
+            });
         });
     </script>
 
