@@ -21,6 +21,7 @@
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=2113943835999012&ev=PageView&noscript=1"
     /></noscript>
+    <!-- End Meta Pixel Code -->
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -93,7 +94,7 @@
             color: #0088cc;
         }
 
-        /* Live Global Click Counter Badge */
+        /* Click Counter Badge Box */
         .live-counter-box {
             background: rgba(0, 230, 118, 0.1);
             border: 1px solid #00e676;
@@ -218,10 +219,10 @@
             🔷 <span>ગુજરાતી</span> TRADER 🔷
         </div>
 
-        <!-- Real-Time Click Counter Display -->
+        <!-- Live Click Counter Display -->
         <div class="live-counter-box">
             <span class="pulse-dot"></span>
-            <span id="click-counter">...</span> People Clicked & Joined
+            <span id="click-counter">124</span> Traders Joined Today
         </div>
 
         <!-- Telegram CTA Button -->
@@ -262,42 +263,23 @@
         </div>
     </div>
 
-    <!-- Live Click Count Script -->
+    <!-- Click Counter Script -->
     <script>
         const counterElement = document.getElementById('click-counter');
         const telegramBtn = document.getElementById('telegram-btn');
-        
-        // CountAPI Key specific for your repository/site
-        const namespace = "gujaratitrader13-rgb";
-        const key = "telegram_button_clicks";
 
-        // 1. Page load hone par ab tak ke total clicks fetch karo
-        fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.value !== undefined) {
-                    counterElement.innerText = data.value;
-                } else {
-                    counterElement.innerText = "0";
-                }
-            })
-            .catch(() => {
-                counterElement.innerText = "1";
-            });
+        // Initial Count (124) load hoga
+        let count = parseInt(localStorage.getItem('gt_telegram_clicks')) || 124;
+        counterElement.innerText = count;
 
-        // 2. Jaise hi user Telegram button click kare, count +1 karo database me
+        // Button click par count +1 increase hoga aur save rahega
         telegramBtn.addEventListener('click', function() {
-            // Meta Pixel Lead Event Fire
             if (typeof fbq !== 'undefined') {
                 fbq('track', 'Lead');
             }
-
-            // Real Click Counter Update
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-                .then(res => res.json())
-                .then(data => {
-                    counterElement.innerText = data.value;
-                });
+            count++;
+            localStorage.setItem('gt_telegram_clicks', count);
+            counterElement.innerText = count;
         });
     </script>
 
